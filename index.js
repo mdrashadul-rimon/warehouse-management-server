@@ -81,7 +81,7 @@ async function run() {
             const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
             res.send(result);
         })
-
+        
         //Delete Inventory
         app.delete('/inventory/:id', async (req, res) => {
             const id = req.params.id;
@@ -93,19 +93,7 @@ async function run() {
 
         //ItemsList API
 
-        app.get('/itemList', verifyJWT, async (req, res) => {
-            const decodedEmail = req.decoded.email;
-            const email = req.query.email;
-            if (email === decodedEmail) {
-                const query = { email: email };
-                const cursor = itemList.find(query);
-                const items = await cursor.toArray();
-                res.send(items);
-            }
-            else {
-                res.status(403).send({ message: 'forbidden access' });
-            }
-        })
+        
 
         app.post('/itemList', async (req, res) => {
             const items = req.body;
