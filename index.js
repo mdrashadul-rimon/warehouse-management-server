@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion, ObjectId} = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000;
@@ -22,7 +22,7 @@ function verifyJWT(req, res, next) {
         console.log('decoded', decoded);
         req.decoded = decoded;
         next();
-    }) 
+    })
 }
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jbosz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
@@ -67,6 +67,21 @@ async function run() {
             res.send(result);
         });
 
+        //update Inventory Quantity
+        app.put('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const updatedQuantity = req.body;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updatedDoc = {
+                $set:{
+                    quantity: updatedQuantity.quantity
+                }
+            };
+            const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
+            res.send(result);
+        })
+
         //Delete Inventory
         app.delete('/inventory/:id', async (req, res) => {
             const id = req.params.id;
@@ -87,8 +102,8 @@ async function run() {
                 const items = await cursor.toArray();
                 res.send(items);
             }
-            else{
-                res.status(403).send({message: 'forbidden access'});
+            else {
+                res.status(403).send({ message: 'forbidden access' });
             }
         })
 
