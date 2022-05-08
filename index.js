@@ -91,9 +91,23 @@ async function run() {
         });
 
 
-        //ItemsList API
 
-        
+
+        //ItemsList API with JWT
+
+        app.get('/itemList', verifyJWT, async (req, res) => {
+            const decodedEmail = req.decoded.email;
+            const email = req.query.email;
+            if (email === decodedEmail) {
+                const query = { email: email };
+                const cursor = itemList.find(query);
+                const items = await cursor.toArray();
+                res.send(items);
+            }
+            else {
+                res.status(403).send({ message: 'Sorry!! forbidden access' });
+            }
+        })
 
         app.post('/itemList', async (req, res) => {
             const items = req.body;
