@@ -68,7 +68,7 @@ async function run() {
         });
 
         //update Inventory Quantity
-        app.put('/inventory/:id', async (req, res) => {
+        app.put('/inventory/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const updatedQuantity = req.body;
             const filter = { _id: ObjectId(id) };
