@@ -60,7 +60,7 @@ async function run() {
             res.send(inventories);
         })
 
-        //post
+        //post to inventory
         app.post('/inventory', async (req, res) => {
             const newInventory = req.body;
             const result = await inventoryCollection.insertOne(newInventory);
